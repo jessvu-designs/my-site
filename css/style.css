@@ -55,6 +55,38 @@ nav {
   letter-spacing: -1px;
 }
 
+/* Header inline weather */
+.header-weather {
+  margin-left: 0.8rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-gray);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  opacity: 0.95;
+}
+.header-weather .hw-emoji {
+  font-size: 1.05rem;
+}
+.header-weather.loading {
+  opacity: 0.7;
+}
+.header-weather .hw-loc {
+  font-size: 0.75rem;
+  color: var(--text-gray);
+  margin-left: 0.4rem;
+  display: inline-block;
+  max-width: 160px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 480px) {
+  .header-weather .hw-loc { display:none; }
+}
+
 .nav-links {
   display: flex;
   list-style: none;
@@ -82,6 +114,7 @@ nav {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 
 .hero h1 {
@@ -240,6 +273,8 @@ nav {
   padding: 5rem 2rem;
   text-align: center;
 }
+
+ 
 
 .contact-container {
   max-width: 800px;
