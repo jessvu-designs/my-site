@@ -73,14 +73,15 @@ nav {
   opacity: 0.7;
 }
 .header-weather .hw-loc {
-  font-size: 0.75rem;
-  color: var(--text-gray);
+  font-size: 0.85rem;
+  color: var(--primary-color);
   margin-left: 0.4rem;
   display: inline-block;
-  max-width: 160px;
+  max-width: 220px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-weight: 600;
 }
 
 @media (max-width: 480px) {
