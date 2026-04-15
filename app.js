@@ -2,9 +2,8 @@
   console.debug('app.js loaded');
   const el = document.getElementById('headerWeather');
   if (!el) console.warn('app.js: #headerWeather element not found');
-  if (!el) return;
-  const emojiEl = el.querySelector('.hw-emoji');
-  const tempEl = el.querySelector('.hw-temp');
+  const emojiEl = el ? el.querySelector('.hw-emoji') : null;
+  const tempEl = el ? el.querySelector('.hw-temp') : null;
   const locEl = document.getElementById('hwLoc');
 
   function setLocation(text, opts = {}) {
@@ -30,17 +29,13 @@
   };
 
   function showMessage(message, emoji) {
-    tempEl.textContent = message;
-    if (emoji) emojiEl.textContent = emoji;
-    el.classList.remove('loading');
+    if (tempEl) tempEl.textContent = message;
+    if (emoji && emojiEl) emojiEl.textContent = emoji;
+    if (el) el.classList.remove('loading');
   }
 
-  if (!navigator.geolocation) {
-    showMessage('N/A', '⚠️');
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition(pos => {
+  if (navigator.geolocation && el) {
+    navigator.geolocation.getCurrentPosition(pos => {
     const lat = pos.coords.latitude;
     const lon = pos.coords.longitude;
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&temperature_unit=fahrenheit&timezone=auto`;
@@ -104,7 +99,7 @@
       console.error(err);
       showMessage('Err','⚠️');
     });
-  }, err => {
+    }, err => {
     if (err.code === 1) {
       showMessage('Enable location','📍');
       if (locEl) locEl.textContent = 'Location disabled';
@@ -113,5 +108,105 @@
       if (locEl) locEl.textContent = '';
     }
     console.error(err);
-  }, {timeout:10000});
+    }, {timeout:10000});
+  } else {
+    // no geolocation or no header element; skip weather display silently
+    console.debug('Geolocation or headerWeather not available; skipping weather widget');
+  }
+
+  // --- Work page filtering (runs regardless of weather widget) ---
+  function initWorkFilters() {
+    const buttons = Array.from(document.querySelectorAll('.filter-button'));
+    const cards = Array.from(document.querySelectorAll('.work-card'));
+    if (!buttons.length || !cards.length) return;
+
+    function applyFilter(filter) {
+      buttons.forEach(b => b.classList.toggle('active', b.dataset.filter === filter));
+      cards.forEach(c => {
+        if (filter === 'all' || c.dataset.type === filter) c.classList.remove('hidden');
+        else c.classList.add('hidden');
+      });
+    }
+
+    buttons.forEach(b => b.addEventListener('click', () => applyFilter(b.dataset.filter)));
+
+    // If page opened with fragment like #product-design, apply matching filter
+    const frag = (location.hash || '').replace('#','');
+    if (frag) {
+      const mapping = { 'product-design': 'product-design', 'ux-research': 'ux-research', 'branding': 'branding' };
+      if (mapping[frag]) applyFilter(mapping[frag]);
+    }
+  }
+
+  // initialize filters on DOMContentLoaded (or immediately if DOM already parsed)
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initWorkFilters);
+  } else {
+    initWorkFilters();
+  }
+
+  // Hide/show work header on scroll (only if .work-header exists)
+  function initHeaderToggle() {
+    const header = document.querySelector('.work-header');
+    if (!header) return;
+
+    let lastY = window.scrollY || 0;
+    let ticking = false;
+    const threshold = 10;
+
+    function update() {
+      const currentY = window.scrollY || 0;
+      // At top: remove overlap so header does not cover cards
+      const container = document.querySelector('.portfolio-container');
+      if (currentY < 120) {
+        if (container) container.classList.remove('overlap');
+      } else {
+        // once user scrolls, allow slight overlap so filters remain visible
+        if (container) container.classList.add('overlap');
+      }
+
+      lastY = currentY;
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    }, { passive: true });
+  }
+
+  // initialize header toggle immediately if DOM ready
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initHeaderToggle);
+  else initHeaderToggle();
+
+  // adjust spacer height so fixed header doesn't overlap content
+  function updateHeaderSpacer() {
+    const pageHeader = document.querySelector('header');
+    const workHeader = document.querySelector('.work-header');
+    const container = document.querySelector('.portfolio-container');
+    const spacer = document.querySelector('.work-header-spacer');
+    if (!spacer || !workHeader) return;
+
+    const headerH = pageHeader ? pageHeader.offsetHeight : 0;
+    const workH = workHeader.offsetHeight;
+    const gap = 24; // visible gap between filters and cards
+    const extraBuffer = 0; // no extra buffer; gap is exact 24px
+
+    // always ensure spacer is large enough so the fixed header doesn't overlap content
+    spacer.style.height = `${headerH + workH + gap + extraBuffer}px`;
+  }
+
+  // update spacer on load/resize and whenever overlap toggles
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      updateHeaderSpacer();
+      window.addEventListener('resize', updateHeaderSpacer);
+    });
+  } else {
+    updateHeaderSpacer();
+    window.addEventListener('resize', updateHeaderSpacer);
+  }
+
 })();

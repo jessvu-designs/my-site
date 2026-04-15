@@ -188,11 +188,12 @@ section.hero > .container {
 
 /* Hero-specific layout for moved About content */
 .hero .about-content {
-  display: flex;
-  gap: 0;
-  align-items: center;
-  width: 100%;
+display: flex;
+gap: 2.5rem !important;
+align-items: center;
+width: 100%;
 }
+
 .hero .about-text {
   text-align: left;
   flex: 2 1 auto;
@@ -209,7 +210,13 @@ section.hero > .container {
 }
 .hero .about-image {
   margin-left: 0;
-  flex: 0 0 320px;
+  flex: 0 0 33.333%;
+  max-width: 33.333%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-left: 0;
 }
 
 /* Circle crop and CTA placement for hero profile image */
@@ -246,6 +253,26 @@ section.hero > .container {
   height: 100%;
   object-fit: cover;
   object-position: top center;
+  display: block;
+}
+/* Option B — make text/photo columns proportional and scale the photo */
+.hero .about-text {
+  flex: 0 0 66.666%;
+  max-width: 66.666%;
+}
+
+.photo-wrap {
+  width: 100%;
+  max-width: 320px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  overflow: hidden;
+  display: block;
+}
+.photo-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   display: block;
 }
 
@@ -314,6 +341,122 @@ section.hero > .container {
   text-align: center;
   font-weight: 700;
 }
+
+/* Work page filters and cards */
+.filters {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin: 1.5rem 0 1rem 0;
+  flex-wrap: wrap;
+}
+.filter-button {
+  padding: 0.5rem 0.9rem;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.filter-button.active {
+  background: var(--accent-color);
+  color: white;
+  border-color: var(--accent-color);
+}
+
+.work-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .work-list { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .work-list { grid-template-columns: 1fr; }
+}
+
+/* Sticky header for work title + filters */
+
+.work-header {
+  --work-header-height: 64px;
+  --work-header-offset: calc(90px + 16px); /* distance from viewport top to work-header top */
+  /* fixed so header stays in place even when items are filtered out */
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  top: var(--work-header-offset);
+  z-index: 70;
+  width: calc(100% - 4rem);
+  max-width: 1200px;
+  background: transparent; /* remove background behind title and filters */
+  padding: 0.35rem 0.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem; /* reduced gap between title and filters */
+  transition: opacity 0.28s ease, background 0.28s ease;
+  transform-origin: top center;
+  opacity: 1;
+  min-height: var(--work-header-height);
+}
+
+@media (max-width: 700px) {
+  .work-header { top: 70px; padding: 0.5rem 0.25rem; }
+}
+
+.work-header.hidden {
+  transform: translateY(-120%);
+  opacity: 0;
+}
+
+/* prevent sticky header overlapping the work cards: reserve space equal to header height */
+
+/* reserve space inside the portfolio container so fixed header doesn't overlap content */
+.portfolio-container {
+  /* spacer element will reserve the vertical space; reset container padding */
+  padding-top: 0;
+}
+
+/* spacer element to keep layout from shifting under the fixed header */
+.work-header-spacer {
+  height: calc(var(--work-header-offset) + var(--work-header-height) + var(--work-header-gap) + 16px);
+}
+
+/* when user scrolls, allow a small overlap so filters remain visible over cards */
+.portfolio-container.overlap .work-header-spacer {
+  /* when overlapping, reduce spacer so header overlaps cards by --work-header-overlap */
+  height: calc(var(--work-header-offset) + var(--work-header-height) - var(--work-header-overlap));
+}
+
+/* tighten title spacing */
+.work-header .section-title { margin: 0; }
+.work-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.work-thumb {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 0.75rem;
+  display: block;
+}
+.work-card h4 {
+  margin-bottom: 0.5rem;
+  font-size: 1.05rem;
+}
+.work-card p {
+  color: var(--text-gray);
+  font-size: 0.95rem;
+}
+.work-card.hidden { display: none !important; }
 
 .portfolio-grid {
   display: grid;
@@ -402,10 +545,9 @@ section.hero > .container {
 }
 
 .portfolio-content p {
-  color: var(--text-gray);
-  font-size: 0.95rem;
+.portfolio-container.overlap {
+  /* overlap mode removed — spacer is managed dynamically to prevent overlap */
 }
-
 /* About Section */
 .about {
   max-width: 1200px;
@@ -514,12 +656,50 @@ section.hero > .container {
 }
 
 /* Footer */
+/* Footer */
 footer {
-  background-color: #0a0a0a;
-  color: #999;
-  text-align: center;
-  padding: 2rem;
-  font-size: 0.9rem;
+  background: linear-gradient(180deg, #0b0b0b 0%, #070707 100%);
+  color: #d6d6d6;
+  padding: 3rem 1.5rem;
+  font-size: 0.95rem;
+}
+
+footer .footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+footer p {
+  margin: 0;
+  color: #cfcfcf;
+}
+
+/* simple footer links / social */
+footer .footer-links {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+footer .footer-links a {
+  color: #bfbfbf;
+  text-decoration: none;
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.12s ease;
+}
+footer .footer-links a:hover {
+  background: rgba(255,255,255,0.03);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 700px) {
+  footer .footer-inner { flex-direction: column; text-align: center; }
 }
 
 /* Responsive */
