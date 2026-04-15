@@ -23,51 +23,29 @@
 
   <!-- Portfolio Section -->
   <section class="portfolio" id="portfolio" style="min-height: calc(100vh - 100px); display: flex; align-items: center;">
-    <div class="portfolio-container">
+    <div class="portfolio-container container">
       <h2 class="section-title">My Work</h2>
-      <p><a class="raw-link" href="../work.md">View raw Markdown</a></p>
-      <div id="md-content">Loading content…</div>
-      <div class="portfolio-grid">
-        <div class="portfolio-item">
-          <div class="portfolio-image">🎨</div>
-          <div class="portfolio-content">
-            <h3>Brand Identity</h3>
-            <p>Complete brand development including logo, color palette, and visual guidelines for modern startups. Creating cohesive brand experiences across all touchpoints.</p>
-          </div>
-        </div>
-        <div class="portfolio-item">
-          <div class="portfolio-image">✨</div>
-          <div class="portfolio-content">
-            <h3>UI/UX Design</h3>
-            <p>User-centered digital designs that enhance user experience and drive engagement across platforms. Conducting research and testing to ensure optimal usability.</p>
-          </div>
-        </div>
-        <div class="portfolio-item">
-          <div class="portfolio-image">📱</div>
-          <div class="portfolio-content">
-            <h3>Web Design</h3>
-            <p>Responsive, modern websites designed to captivate visitors and convert them into customers. Building digital experiences that are both beautiful and functional.</p>
-          </div>
-        </div>
-        <div class="portfolio-item">
-          <div class="portfolio-image">🎭</div>
-          <div class="portfolio-content">
-            <h3>Visual Design</h3>
-            <p>Strategic visual communication that conveys your message effectively. From marketing collateral to presentation design, every detail matters.</p>
-          </div>
-        </div>
-        <div class="portfolio-item">
-          <div class="portfolio-image">🔧</div>
-          <div class="portfolio-content">
-            <h3>Design Systems</h3>
-            <p>Building scalable design systems and component libraries that ensure consistency and efficiency across large-scale projects.</p>
-          </div>
-        </div>
+      
+      <div class="portfolio-grid stack">
         <div class="portfolio-item">
           <div class="portfolio-image">🚀</div>
           <div class="portfolio-content">
             <h3>Product Design</h3>
             <p>End-to-end product design from concept to launch. Working collaboratively with teams to create innovative solutions that users love.</p>
+          </div>
+        </div>
+        <div class="portfolio-item">
+          <div class="portfolio-image">✨</div>
+          <div class="portfolio-content">
+            <h3>UX Research</h3>
+            <p>User-centered research and testing to understand needs, validate designs, and inform product decisions.</p>
+          </div>
+        </div>
+        <div class="portfolio-item">
+          <div class="portfolio-image">🎨</div>
+          <div class="portfolio-content">
+            <h3>Branding</h3>
+            <p>Brand development including logo, color palette, and visual guidelines to create cohesive brand experiences.</p>
           </div>
         </div>
       </div>
@@ -78,25 +56,6 @@
   <footer>
     <p>&copy; 2026 Jess. All rights reserved. Crafted with design.</p>
   </footer>
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/dompurify@2.4.0/dist/purify.min.js"></script>
-  <script>
-    fetch('../work.md')
-      .then(res => {
-        if (!res.ok) throw new Error('Network response was not ok');
-        return res.text();
-      })
-      .then(text => {
-        const container = document.getElementById('md-content');
-        const html = marked.parse(text);
-        const safe = DOMPurify.sanitize(html);
-        container.innerHTML = safe;
-      })
-      .catch(err => {
-        const container = document.getElementById('md-content');
-        if (container) container.textContent = 'Unable to load work.md';
-        console.error(err);
-      });
-  </script>
+  
 </body>
 </html>
