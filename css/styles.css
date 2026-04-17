@@ -808,6 +808,31 @@ width: 100%;
   transform: translateY(-2px);
 }
 
+.field-error {
+  font-size: 0.8rem;
+  color: #c0392b;
+  min-height: 1rem;
+  display: block;
+}
+
+.form-group input.invalid,
+.form-group textarea.invalid {
+  border-color: #c0392b;
+  box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.1);
+}
+
+.form-group input.valid,
+.form-group textarea.valid {
+  border-color: #27ae60;
+}
+
+.form-success {
+  color: #27ae60;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-top: 0.5rem;
+}
+
 @media (max-width: 700px) {
   .contact-page-container {
     grid-template-columns: 1fr;

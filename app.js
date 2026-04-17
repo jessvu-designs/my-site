@@ -10,6 +10,58 @@
     }
   });
 
+  // Contact form validation
+  const contactForm = document.querySelector('.contact-form');
+  if (contactForm) {
+    function validateField(input) {
+      const errorEl = input.closest('.form-group').querySelector('.field-error');
+      let message = '';
+
+      if (input.required && !input.value.trim()) {
+        message = 'This field is required.';
+      } else if (input.type === 'email' && input.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value.trim())) {
+        message = 'Please enter a valid email address.';
+      }
+
+      if (message) {
+        input.classList.add('invalid');
+        input.classList.remove('valid');
+        errorEl.textContent = message;
+        return false;
+      } else if (input.value.trim()) {
+        input.classList.remove('invalid');
+        input.classList.add('valid');
+        errorEl.textContent = '';
+      } else {
+        input.classList.remove('invalid', 'valid');
+        errorEl.textContent = '';
+      }
+      return true;
+    }
+
+    // Validate on blur for real-time feedback
+    contactForm.querySelectorAll('input, textarea').forEach(input => {
+      input.addEventListener('blur', () => validateField(input));
+      input.addEventListener('input', () => {
+        if (input.classList.contains('invalid')) validateField(input);
+      });
+    });
+
+    contactForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const fields = contactForm.querySelectorAll('input, textarea');
+      let valid = true;
+      fields.forEach(input => { if (!validateField(input)) valid = false; });
+
+      if (valid) {
+        const successEl = contactForm.querySelector('.form-success');
+        contactForm.querySelector('.contact-submit').disabled = true;
+        contactForm.querySelector('.contact-submit').textContent = 'Sent!';
+        successEl.hidden = false;
+      }
+    });
+  }
+
   const el = document.getElementById('headerWeather');
   if (!el) console.warn('app.js: #headerWeather element not found');
   const emojiEl = el ? el.querySelector('.hw-emoji') : null;
