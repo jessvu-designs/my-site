@@ -1,5 +1,15 @@
 (function(){
   console.debug('app.js loaded');
+
+  // Mark active nav link based on current page
+  const currentPath = window.location.pathname;
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    const linkPath = new URL(link.href).pathname;
+    if (linkPath === currentPath || (currentPath.endsWith('/') && linkPath === currentPath + 'index.html')) {
+      link.classList.add('active');
+    }
+  });
+
   const el = document.getElementById('headerWeather');
   if (!el) console.warn('app.js: #headerWeather element not found');
   const emojiEl = el ? el.querySelector('.hw-emoji') : null;
@@ -145,68 +155,8 @@
     initWorkFilters();
   }
 
-  // Hide/show work header on scroll (only if .work-header exists)
-  function initHeaderToggle() {
-    const header = document.querySelector('.work-header');
-    if (!header) return;
 
-    let lastY = window.scrollY || 0;
-    let ticking = false;
-    const threshold = 10;
 
-    function update() {
-      const currentY = window.scrollY || 0;
-      // At top: remove overlap so header does not cover cards
-      const container = document.querySelector('.portfolio-container');
-      if (currentY < 120) {
-        if (container) container.classList.remove('overlap');
-      } else {
-        // once user scrolls, allow slight overlap so filters remain visible
-        if (container) container.classList.add('overlap');
-      }
 
-      lastY = currentY;
-      ticking = false;
-    }
-
-    window.addEventListener('scroll', () => {
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(update);
-      }
-    }, { passive: true });
-  }
-
-  // initialize header toggle immediately if DOM ready
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initHeaderToggle);
-  else initHeaderToggle();
-
-  // adjust spacer height so fixed header doesn't overlap content
-  function updateHeaderSpacer() {
-    const pageHeader = document.querySelector('header');
-    const workHeader = document.querySelector('.work-header');
-    const container = document.querySelector('.portfolio-container');
-    const spacer = document.querySelector('.work-header-spacer');
-    if (!spacer || !workHeader) return;
-
-    const headerH = pageHeader ? pageHeader.offsetHeight : 0;
-    const workH = workHeader.offsetHeight;
-    const gap = 24; // visible gap between filters and cards
-    const extraBuffer = 0; // no extra buffer; gap is exact 24px
-
-    // always ensure spacer is large enough so the fixed header doesn't overlap content
-    spacer.style.height = `${headerH + workH + gap + extraBuffer}px`;
-  }
-
-  // update spacer on load/resize and whenever overlap toggles
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      updateHeaderSpacer();
-      window.addEventListener('resize', updateHeaderSpacer);
-    });
-  } else {
-    updateHeaderSpacer();
-    window.addEventListener('resize', updateHeaderSpacer);
-  }
 
 })();
