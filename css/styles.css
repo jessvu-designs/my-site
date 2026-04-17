@@ -59,6 +59,36 @@ nav {
   align-items: center;
 }
 
+.logo a {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  text-decoration: none;
+}
+
+.logo-prefix {
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-gray);
+}
+
+.logo-x {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #B5177E;
+  letter-spacing: 0;
+}
+
+.logo-name {
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-gray);
+}
+
 .logo {
   font-size: 1.8rem;
   font-weight: 700;
