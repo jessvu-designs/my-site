@@ -2,6 +2,27 @@
 
 A personal portfolio and contact site for Jess, a research-driven product designer.
 
+## About This Project
+
+This site was built as **Capstone Project 1 — Build Your Personal Page** for the **Protogen 100s** program at Slalom.
+
+> **Premise:** You've just started freelancing and need a simple web presence — somewhere to send people when they ask what you do. Nothing fancy. With no developer on call and no website builder subscription, it's up to you to build it yourself (with your AI coworker, of course). Get comfortable with a new, AI-assisted workflow: prompt → review → keep or undo → deploy.
+
+**Series:** 100s | **Tools:** Homebrew, VS Code, GitHub / GitHub Copilot, Vercel
+
+### Project Requirements
+
+- [x] Basic sections typically included on a personal page (Contact button, cropped photo)
+- [x] At least one visually interactive element
+- [x] A Weather API
+- [x] A GitHub repo organized into multiple files
+
+### Learning Objectives
+
+- Develop greater comfort navigating an AI-assisted development environment without full technical knowledge
+- Practice using natural language prompting to build and iterate on a functional prototype
+- Develop version control and basic troubleshooting techniques
+
 ## Pages
 
 | Page | Path | Description |
